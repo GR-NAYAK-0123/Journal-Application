@@ -32,8 +32,8 @@ public class JournalEntryController {
     @PostMapping
     public ResponseEntity<?> postJournal(@RequestBody JournalEntry myJournal){
         try{
-            myJournal.setDate(LocalDateTime.now());
-            return new ResponseEntity<>(journalService.saveJournalEntry(myJournal), HttpStatus.CREATED);
+            journalService.saveJournalEntry(myJournal);
+            return new ResponseEntity<>(myJournal, HttpStatus.CREATED);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -61,7 +61,8 @@ public class JournalEntryController {
         if(oldEntry.get() != null){
             oldEntry.get().setContent(newEntry.getContent() != null && !newEntry.getContent().isEmpty() ? newEntry.getContent() : oldEntry.get().getContent());
             oldEntry.get().setTitle(newEntry.getTitle() != null && !newEntry.getTitle().isEmpty() ? newEntry.getTitle() : oldEntry.get().getTitle());
-            return new ResponseEntity<>(journalService.saveJournalEntry(oldEntry.get()),HttpStatus.OK);
+            journalService.saveJournalEntry(oldEntry.get());
+            return new ResponseEntity<>(oldEntry.get(),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
