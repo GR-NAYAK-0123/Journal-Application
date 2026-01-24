@@ -33,15 +33,17 @@ public class JournalEntryController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("{userName}")
+    @PostMapping("/{userName}")
     public ResponseEntity<?> postJournal(@RequestBody JournalEntry myJournal, @PathVariable String userName){
         try{
             journalService.saveJournalEntry(myJournal, userName);
             return new ResponseEntity<>(myJournal, HttpStatus.CREATED);
         }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
+
     }
 
     @GetMapping("id/{myId}")
@@ -55,6 +57,7 @@ public class JournalEntryController {
 
     @DeleteMapping("id/{userName}/{id}")
     public ResponseEntity<?> deleteJournalById(@PathVariable String userName, @PathVariable ObjectId id){
+
         journalService.deleteJournalEntryById(userName, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
