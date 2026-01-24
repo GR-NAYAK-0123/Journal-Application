@@ -8,6 +8,7 @@ import net.engineeringdigest.journalApp.repository.IUserRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,7 @@ public class JournalService {
     }
 
     //This is a save method for saving the entity in the database
+    @Transactional
     public void saveJournalEntry(JournalEntry newEntry, String userName){
         try{
             User user = userRepo.findByUserName(userName);
@@ -43,7 +45,7 @@ public class JournalService {
             userRepo.save(user);
         }
         catch(Exception e){
-            log.error("Exception", e);
+            throw new RuntimeException("An error occurred while saving the entry", e);
         }
     }
 
@@ -52,6 +54,7 @@ public class JournalService {
     }
 
     //This is a method which is used to delete an entity from the database based on the id
+    @Transactional
     public void deleteJournalEntryById(String userName, ObjectId id){
         User user = userRepo.findByUserName(userName);
         user.getJournalEntries().removeIf(x -> x.getId().equals(id));
